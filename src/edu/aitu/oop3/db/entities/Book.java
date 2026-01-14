@@ -2,18 +2,18 @@ package edu.aitu.oop3.db.entities;
 
 public class Book {
     private int id;
-    private static int idGen=1;
     private String title;
     private String author;
     private int year;
     private boolean available;
 
-    public Book() {
-        id = idGen++;
-        available = true;
-    }
+    public Book() {}
     public Book(int id, String title, String author, int year, boolean available) {
         this.id = id;
+        setTitle(title);
+        setAuthor(author);
+        setYear(year);
+        setAvailable(available);
     }
     public void setTitle(String title) {
         this.title = title;
@@ -27,6 +27,11 @@ public class Book {
     public void setAvailable(boolean available) {
         this.available = available;
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
@@ -39,6 +44,11 @@ public class Book {
     public int getYear() {
         return year;
     }
-
-
+    public boolean isAvailable() {
+        return available;
+    }
+    @Override
+    public String toString() {
+        return " Book:" + id + ", title = " + title + ", author = " + author + ", year = " + year + ", available = " + available + ".";
+    }
 }
