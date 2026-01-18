@@ -1,4 +1,4 @@
-package interfaces;
+package edu.aitu.oop3.db.repositories.interfaces;
 
 import edu.aitu.oop3.db.entities.Book;
 

@@ -7,7 +7,7 @@ public class Book {
     private int year;
     private boolean available;
 
-    public Book() {}
+    public Book(int anInt) {}
     public Book(int id, String title, String author, int year, boolean available) {
         this.id = id;
         setTitle(title);

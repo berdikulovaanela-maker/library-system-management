@@ -1,4 +1,8 @@
 import edu.aitu.oop3.db.DatabaseConnection;
+import edu.aitu.oop3.db.PostgresDB;
+import edu.aitu.oop3.db.repositories.BookRepositoryImpl;
+import edu.aitu.oop3.db.repositories.interfaces.BookRepository;
+import edu.aitu.oop3.db.repositories.interfaces.IDB;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,4 +24,6 @@ void main() {
         IO.println("Error while connecting to database:");
         e.printStackTrace();
     }
+    IDB db = new PostgresDB("jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:5432/postgres?sslmode=require", "postgres.uhdkdzvvhltmizldvoix", "library_it-2508");
+    BookRepository bookRepo = new BookRepositoryImpl(db);
 }

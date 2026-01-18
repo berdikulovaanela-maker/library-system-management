@@ -9,7 +9,7 @@ public class Loan {
     private LocalDate loanDate;
     private LocalDate dueDate;
     private LocalDate returnDate;
-    public Loan(){}
+    public Loan(int memberId, int bookId, LocalDate loanDate, LocalDate dueDate, Object o){}
     public Loan(int id,int memberId, int bookId, LocalDate loanDate, LocalDate dueDate, LocalDate returnDate) {
         this.id = id;
         this.memberId = memberId;
