@@ -1,7 +1,7 @@
 package edu.aitu.oop3.db.repositories;
 
 import edu.aitu.oop3.db.entities.Loan;
-import edu.aitu.oop3.db.repositories.interfaces.IDB;
+import edu.aitu.oop3.db.db.IDB;
 import edu.aitu.oop3.db.repositories.interfaces.LoanRepository;
 
 import java.sql.*;
@@ -15,7 +15,30 @@ public class LoanRepositoryImpl implements LoanRepository {
     public LoanRepositoryImpl(IDB db) {
         this.db = db;
     }
-
+    @Override
+    public Loan findById(int loanId) {
+        String sql = "SELECT * FROM loans WHERE id = ?";
+        try (Connection conn = db.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, loanId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new Loan(
+                        rs.getInt("id"),
+                        rs.getInt("member_id"),
+                        rs.getInt("book_id"),
+                        rs.getDate("loan_date").toLocalDate(),
+                        rs.getDate("due_date").toLocalDate(),
+                        rs.getDate("return_date") == null
+                                ? null
+                                : rs.getDate("return_date").toLocalDate()
+                );
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
     @Override
     public Loan createLoan(Loan loan) {
         String sql = "INSERT INTO loans (member_id, book_id, loan_date, due_date, return_date)\n" +
@@ -52,6 +75,7 @@ public class LoanRepositoryImpl implements LoanRepository {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Loan loan = new Loan(
+                            rs.getInt("id"),
                             rs.getInt("member_id"),
                             rs.getInt("book_id"),
                             rs.getDate("loan_date").toLocalDate(),

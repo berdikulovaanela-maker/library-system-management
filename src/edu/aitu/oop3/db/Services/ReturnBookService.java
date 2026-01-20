@@ -3,32 +3,37 @@ package edu.aitu.oop3.db.Services;
 import edu.aitu.oop3.db.entities.Loan;
 import edu.aitu.oop3.db.entities.Book;
 import edu.aitu.oop3.db.Exceptions.LoanOverdueException;
+import edu.aitu.oop3.db.repositories.BookRepositoryImpl;
+import edu.aitu.oop3.db.repositories.LoanRepositoryImpl;
+import edu.aitu.oop3.db.repositories.MemberRepositoryImpl;
 import edu.aitu.oop3.db.repositories.interfaces.BookRepository;
 import edu.aitu.oop3.db.repositories.interfaces.LoanRepository;
 
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 
 public class ReturnBookService {
-    private final BookRepository bookRepository;
-    private final LoanRepository loanRepository;
-
-    public ReturnBookService(BookRepository bookRepository, LoanRepository loanRepository) {
+    private final BookRepositoryImpl bookRepository;
+    private final LoanRepositoryImpl loanRepository;
+    private final MemberRepositoryImpl memberRepository;
+    public ReturnBookService(BookRepositoryImpl bookRepository, LoanRepositoryImpl loanRepository,  MemberRepositoryImpl memberRepository) {
         this.bookRepository = bookRepository;
         this.loanRepository = loanRepository;
+        this.memberRepository = memberRepository;
     }
-
     public void execute(int loanId) {
-        Loan loan = null;
-
-        if (loan == null || loan.getReturnDate() != null) {
-            throw new RuntimeException("Заем не найден или книга уже возвращена.");
+        Loan loan = loanRepository.findById(loanId);
+        if (loan == null || loan.getReturnDate() == null) {
+            throw new RuntimeException("Loan not found or already returned.");
         }
-        Date actualReturnDate = new Date();
-        Date duedate = Date.from(loan.getDueDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
-        if (actualReturnDate.after(duedate)) {
-            throw new LoanOverdueException("Книга просрочена! Срок был до " + loan.getDueDate());
+        LocalDate today = LocalDate.now();
+        if (today.isAfter(loan.getReturnDate())) {
+            throw new LoanOverdueException("Book is overdue! Due date was " + loan.getDueDate());
         }
-        System.out.println("Книга успешно возвращена через ReturnBookService.");
+        loanRepository.updateLoanStatus(loan);
+        bookRepository.updateBookAvailability(loan.getBookId(),true);
+        System.out.println("Book successfully returned!");
     }
 }

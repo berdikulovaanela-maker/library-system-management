@@ -2,7 +2,7 @@ package edu.aitu.oop3.db.repositories;
 
 import edu.aitu.oop3.db.entities.Book;
 import edu.aitu.oop3.db.repositories.interfaces.BookRepository;
-import edu.aitu.oop3.db.repositories.interfaces.IDB;
+import edu.aitu.oop3.db.db.IDB;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

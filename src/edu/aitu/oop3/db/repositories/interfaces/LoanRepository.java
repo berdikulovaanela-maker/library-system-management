@@ -5,6 +5,7 @@ import edu.aitu.oop3.db.entities.Loan;
 import java.util.List;
 
 public interface LoanRepository {
+    Loan findById(int loanId);
     Loan createLoan(Loan loan);
     List<Loan> findActiveLoansByMemberId(int memberId);
     void updateLoanStatus(Loan loan);

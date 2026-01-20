@@ -1,7 +1,7 @@
 package edu.aitu.oop3.db.repositories;
 
 import edu.aitu.oop3.db.entities.Member;
-import edu.aitu.oop3.db.repositories.interfaces.IDB;
+import edu.aitu.oop3.db.db.IDB;
 import edu.aitu.oop3.db.repositories.interfaces.MemberRepository;
 
 import java.sql.Connection;

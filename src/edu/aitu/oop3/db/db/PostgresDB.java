@@ -1,6 +1,4 @@
-package edu.aitu.oop3.db;
-
-import edu.aitu.oop3.db.repositories.interfaces.IDB;
+package edu.aitu.oop3.db.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
