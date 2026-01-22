@@ -3,18 +3,12 @@ package edu.aitu.oop3.db.Services;
 import edu.aitu.oop3.db.entities.Book;
 import edu.aitu.oop3.db.Exceptions.BookAlreadyOnLoanException;
 import edu.aitu.oop3.db.Exceptions.MemberNotFoundException;
-import edu.aitu.oop3.db.repositories.BookRepositoryImpl;
-import edu.aitu.oop3.db.repositories.LoanRepositoryImpl;
-import edu.aitu.oop3.db.repositories.MemberRepositoryImpl;
 import edu.aitu.oop3.db.repositories.interfaces.BookRepository;
 import edu.aitu.oop3.db.repositories.interfaces.MemberRepository;
-import edu.aitu.oop3.db.repositories.interfaces.LoanRepository;
-import java.util.Date;
-
 
 public class BorrowBookService {
-    private MemberRepositoryImpl memberRepository;
-    private BookRepositoryImpl bookRepository;
+    private MemberRepository memberRepository;
+    private BookRepository bookRepository;
     public void execute(int bookID, int memberId) {
         if (memberRepository.findMemberById(memberId) == null) {
             throw new MemberNotFoundException("Member with ID " + memberId + "is not found");
