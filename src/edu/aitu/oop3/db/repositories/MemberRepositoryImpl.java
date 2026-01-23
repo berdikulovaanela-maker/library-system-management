@@ -18,14 +18,14 @@ public class MemberRepositoryImpl  implements MemberRepository {
     }
     @Override
     public Member findMemberById(int memberId) {
-        String sql = "SELECT * FROM members WHERE member_id = ?";
+        String sql = "SELECT * FROM members WHERE id = ?";
         try (Connection conn = db.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, memberId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return new Member(
-                            rs.getInt("member_id"),
+                            rs.getInt("id"),
                             rs.getString("first_name"),
                             rs.getString("last_name"),
                             rs.getString("email")
@@ -49,7 +49,7 @@ public class MemberRepositoryImpl  implements MemberRepository {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return new Member(
-                            rs.getInt("member_id"),
+                            rs.getInt("id"),
                             rs.getString("first_name"),
                             rs.getString("last_name"),
                             rs.getString("email")
@@ -71,7 +71,7 @@ public class MemberRepositoryImpl  implements MemberRepository {
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
                         return new Member(
-                                rs.getInt("member_id"),
+                                rs.getInt("id"),
                                 rs.getString("first_name"),
                                 rs.getString("last_name"),
                                 rs.getString("email")
@@ -115,7 +115,7 @@ public class MemberRepositoryImpl  implements MemberRepository {
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Member member = new Member(
-                        rs.getInt("member_id"),
+                        rs.getInt("id"),
                         rs.getString("first_name"),
                         rs.getString("last_name"),
                         rs.getString("email")

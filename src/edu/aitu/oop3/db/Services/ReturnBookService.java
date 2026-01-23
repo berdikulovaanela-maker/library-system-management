@@ -9,19 +9,17 @@ import java.time.LocalDate;
 public class ReturnBookService {
     private final BookRepository bookRepository;
     private final LoanRepository loanRepository;
-    private final MemberRepository memberRepository;
-    public ReturnBookService(BookRepository bookRepository, LoanRepository loanRepository,  MemberRepository memberRepository) {
+    public ReturnBookService(BookRepository bookRepository, LoanRepository loanRepository) {
         this.bookRepository = bookRepository;
         this.loanRepository = loanRepository;
-        this.memberRepository = memberRepository;
     }
     public void execute(int loanId) {
         Loan loan = loanRepository.findById(loanId);
-        if (loan == null || loan.getReturnDate() == null) {
+        if (loan == null || loan.getReturnDate() != null) {
             throw new RuntimeException("Loan not found or already returned.");
         }
         LocalDate today = LocalDate.now();
-        if (today.isAfter(loan.getReturnDate())) {
+        if (today.isAfter(loan.getDueDate())) {
             throw new LoanOverdueException("Book is overdue! Due date was " + loan.getDueDate());
         }
         loanRepository.updateLoanStatus(loan);

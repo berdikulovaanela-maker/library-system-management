@@ -5,9 +5,8 @@ public class Member {
     private String firstName;
     private String lastName;
     private String email;
-    public Member(){}
     public Member(int id, String firstName, String lastName, String email) {
-        this.id = id;
+        setId(id);
         setEmail(email);
         setFirstName(firstName);
         setLastName(lastName);
@@ -32,6 +31,9 @@ public class Member {
         return lastName;
     }
     public void setEmail(String email) {
+        if(email == null || !email.contains("@")) {
+            throw new IllegalArgumentException("Invalid email address");
+        }
         this.email = email;
     }
     public String getEmail() {
@@ -39,6 +41,6 @@ public class Member {
     }
     @Override
     public String toString() {
-        return "Member name: " + firstName + " " + lastName + " email: " + email;
+        return "Member name: " + firstName + "Last name: " + lastName + " email: " + email;
     }
 }

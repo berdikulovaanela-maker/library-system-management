@@ -9,14 +9,13 @@ public class Loan {
     private LocalDate loanDate;
     private LocalDate dueDate;
     private LocalDate returnDate;
-    public Loan(int memberId, int bookId, LocalDate loanDate, LocalDate dueDate, Object o){}
     public Loan(int id,int memberId, int bookId, LocalDate loanDate, LocalDate dueDate, LocalDate returnDate) {
-        this.id = id;
-        this.memberId = memberId;
-        this.bookId = bookId;
-        this.loanDate = loanDate;
-        this.dueDate = dueDate;
-        this.returnDate = returnDate;
+        setId(id);
+        setMemberId(memberId);
+        setBookId(bookId);
+        setLoanDate(loanDate);
+        setDueDate(dueDate);
+        setReturnDate(returnDate);
     }
     public int getId() {
         return id;
@@ -40,15 +39,22 @@ public class Loan {
         return loanDate;
     }
     public void setLoanDate(LocalDate loanDate) {
+        if(loanDate == null){
+            throw new NullPointerException("Loan Date cannot be null");
+        }
         this.loanDate = loanDate;
     }
-    public LocalDate getDueDate() {
-        return dueDate;
-    }
+    public LocalDate getDueDate() {return dueDate;}
     public void setDueDate(LocalDate dueDate) {
+        if(dueDate == null || dueDate.isBefore(loanDate)){
+            throw new NullPointerException("Due Date cannot be null or before loan date");
+        }
         this.dueDate = dueDate;
     }
     public void setReturnDate(LocalDate returnDate) {
+        if(returnDate == null || returnDate.isBefore(loanDate)){
+            throw new NullPointerException("Return Date cannot be null or before loan date");
+        }
         this.returnDate = returnDate;
     }
     public LocalDate getReturnDate() {

@@ -9,6 +9,10 @@ import edu.aitu.oop3.db.repositories.interfaces.MemberRepository;
 public class BorrowBookService {
     private MemberRepository memberRepository;
     private BookRepository bookRepository;
+    public BorrowBookService(MemberRepository memberRepository, BookRepository bookRepository) {
+        this.memberRepository = memberRepository;
+        this.bookRepository = bookRepository;
+    }
     public void execute(int bookID, int memberId) {
         if (memberRepository.findMemberById(memberId) == null) {
             throw new MemberNotFoundException("Member with ID " + memberId + "is not found");

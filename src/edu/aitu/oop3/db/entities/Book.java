@@ -6,10 +6,8 @@ public class Book {
     private String author;
     private int year;
     private boolean available;
-
-    public Book(int anInt) {}
     public Book(int id, String title, String author, int year, boolean available) {
-        this.id = id;
+        setId(id);
         setTitle(title);
         setAuthor(author);
         setYear(year);
@@ -42,6 +40,9 @@ public class Book {
         return author;
     }
     public int getYear() {
+        if(year<1500 || year>2026){
+            throw new IllegalArgumentException("Impossible to set year");
+        }
         return year;
     }
     public boolean isAvailable() {
@@ -49,6 +50,6 @@ public class Book {
     }
     @Override
     public String toString() {
-        return " Book:" + id + ", title = " + title + ", author = " + author + ", year = " + year + ", available = " + available + ".";
+        return " Book["+ "id:" + id + ", title: " + title + ", author: " + author + ", year: " + year + ", available: " + available + "]";
     }
 }

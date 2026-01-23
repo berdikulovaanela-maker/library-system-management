@@ -1,0 +1,81 @@
+package edu.aitu.oop3.db;
+
+import edu.aitu.oop3.db.Exceptions.LoanOverdueException;
+import edu.aitu.oop3.db.Services.AvailableBooksService;
+import edu.aitu.oop3.db.Services.BorrowBookService;
+import edu.aitu.oop3.db.Services.CurrentLoansService;
+import edu.aitu.oop3.db.Services.ReturnBookService;
+import edu.aitu.oop3.db.entities.Book;
+
+import java.util.List;
+import java.util.Scanner;
+
+public class LibrarySystem {
+    private Scanner scanner = new Scanner(System.in);
+    private final AvailableBooksService availableBooksService;
+    private final CurrentLoansService currentLoansService;
+    private final ReturnBookService returnBookService;
+    private final BorrowBookService borrowBookService;
+    public LibrarySystem(AvailableBooksService availableBooksService, CurrentLoansService currentLoansService, ReturnBookService returnBookService, BorrowBookService borrowBookService){
+        this.availableBooksService = availableBooksService;
+        this.currentLoansService = currentLoansService;
+        this.returnBookService = returnBookService;
+        this.borrowBookService = borrowBookService;
+    }
+    public void run(){
+        while(true){
+            try {
+                menu();
+                int choice = scanner.nextInt();
+                scanner.nextLine();
+                switch (choice){
+                    case 1:
+                        List<Book> books =availableBooksService.execute();
+                        for (Book book:books){
+                            System.out.println(book);
+                        }
+                        break;
+                    case 2:
+                        System.out.println("Enter member ID:");
+                        int memberID = scanner.nextInt();
+                        scanner.nextLine();
+                        currentLoansService.execute(memberID);
+                        break;
+                    case 3:
+                        System.out.println("Enter loan ID:");
+                        int bookID = scanner.nextInt();
+                        scanner.nextLine();
+                        returnBookService.execute(bookID);
+                        break;
+                    case 4:
+                        System.out.println("Enter book ID:");
+                        int book_ID = scanner.nextInt();
+                        scanner.nextLine();
+                        System.out.println("Enter member ID:");
+                        int member_ID = scanner.nextInt();
+                        scanner.nextLine();
+                        borrowBookService.execute(book_ID, member_ID);
+                        break;
+                    case 5:
+                        System.out.println("Good Bye!");
+                        return;
+                    default:
+                        System.out.println("Wrong choice!!!");
+                }
+            } catch (LoanOverdueException e) {
+                System.out.println(e.getMessage());
+                System.out.println("Please try again!");
+            }
+        }
+
+    }
+    public void menu(){
+        System.out.println("Welcome to the Library Management System!");
+        System.out.println("1. Show Available Books");
+        System.out.println("2. Show Active Loans");
+        System.out.println("3. Return Book");
+        System.out.println("4. Borrow Book");
+        System.out.println("5. Exit");
+        System.out.println("Enter your choice:");
+    }
+}
