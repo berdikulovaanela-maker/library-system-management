@@ -1,8 +1,5 @@
 import edu.aitu.oop3.db.LibrarySystem;
-import edu.aitu.oop3.db.Services.AvailableBooksService;
-import edu.aitu.oop3.db.Services.BorrowBookService;
-import edu.aitu.oop3.db.Services.CurrentLoansService;
-import edu.aitu.oop3.db.Services.ReturnBookService;
+import edu.aitu.oop3.db.Services.*;
 import edu.aitu.oop3.db.db.DatabaseConnection;
 import edu.aitu.oop3.db.db.PostgresDB;
 import edu.aitu.oop3.db.repositories.BookRepositoryImpl;
@@ -37,10 +34,11 @@ void main() {
     BookRepository bookRepo = new BookRepositoryImpl(db);
     MemberRepository memberRepo = new MemberRepositoryImpl(db);
     LoanRepository loanRepo = new LoanRepositoryImpl(db);
+    FineCalculator fineCalc =  new FineCalculator();
     AvailableBooksService availableBooksService = new AvailableBooksService(bookRepo);
     CurrentLoansService currentLoansService = new CurrentLoansService(loanRepo);
-    ReturnBookService returnBookService = new ReturnBookService(bookRepo,loanRepo);
-    BorrowBookService borrowBookService = new BorrowBookService(memberRepo,bookRepo);
+    ReturnBookService returnBookService = new ReturnBookService(bookRepo,loanRepo,fineCalc);
+    BorrowBookService borrowBookService = new BorrowBookService(memberRepo,bookRepo,loanRepo);
     LibrarySystem system = new LibrarySystem(availableBooksService,currentLoansService,returnBookService,borrowBookService);
     system.run();
 }

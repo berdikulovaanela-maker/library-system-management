@@ -33,7 +33,7 @@ public class MemberRepositoryImpl  implements MemberRepository {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error finding by id",e);
         }
 
         return null;
@@ -57,7 +57,7 @@ public class MemberRepositoryImpl  implements MemberRepository {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error finding by email",e);
         }
         return null;
     }
@@ -79,7 +79,7 @@ public class MemberRepositoryImpl  implements MemberRepository {
                     }
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new RuntimeException("Error finding by first name",e);
             }
             return null;
     }
@@ -93,7 +93,7 @@ public class MemberRepositoryImpl  implements MemberRepository {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return new Member(
-                            rs.getInt("member_id"),
+                            rs.getInt("id"),
                             rs.getString("first_name"),
                             rs.getString("last_name"),
                             rs.getString("email")
@@ -101,7 +101,7 @@ public class MemberRepositoryImpl  implements MemberRepository {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error finding by last name",e);
         }
         return null;
     }
@@ -123,7 +123,7 @@ public class MemberRepositoryImpl  implements MemberRepository {
                 members.add(member);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error fetching all members", e);
+            throw new RuntimeException("Error printing all members", e);
         }
         return members;
     }}

@@ -10,12 +10,7 @@ public class CurrentLoansService {
         this.loanRepository = loanRepository;
     }
     public List<Loan> execute(int memberId) {
-        System.out.println("All active loans for member with id: " + memberId);
-        List<Loan> loans = loanRepository.findActiveLoansByMemberId(memberId);
-        if (loans.isEmpty()) {
-            throw  new RuntimeException("No active loans");
-        }
-        return loans;
+        return loanRepository.findActiveLoansByMemberId(memberId);
     }
 }
 
