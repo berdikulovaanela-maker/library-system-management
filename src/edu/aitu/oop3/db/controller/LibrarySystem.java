@@ -27,7 +27,6 @@ public class LibrarySystem {
     }
     public void run(){
         while(true){
-            try {
                 System.out.println("Welcome to the Library Management System!");
                 menu();
                 int choice = scanner.nextInt();
@@ -58,7 +57,10 @@ public class LibrarySystem {
                         System.out.println("Enter loan ID:");
                         int loanID = scanner.nextInt();
                         scanner.nextLine();
-                        returnBookService.execute(loanID);
+                        try{returnBookService.execute(loanID);
+                            System.out.println("Book has been successfully returned!");}
+                        catch (LoanOverdueException e){
+                            System.out.println(e.getMessage());}
                         break;
                     case 4:
                         System.out.println("Enter book ID:");
@@ -79,13 +81,8 @@ public class LibrarySystem {
                     default:
                         System.out.println("Wrong choice!!!");
                 }
-            } catch (LoanOverdueException e) {
-                System.out.println(e.getMessage());
-                System.out.println("Please pay!");
             }
         }
-
-    }
     public void menu(){
         System.out.println("1. Show Available Books");
         System.out.println("2. Show Active Loans");
@@ -93,5 +90,4 @@ public class LibrarySystem {
         System.out.println("4. Borrow Book");
         System.out.println("5. Exit");
         System.out.println("Enter your choice:");
-    }
-}
+    }}
