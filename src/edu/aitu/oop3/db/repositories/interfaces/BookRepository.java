@@ -10,4 +10,6 @@ public interface BookRepository {
     Book findByAuthor(String author);
     List<Book> findAvailableBooks();
     void updateBookAvailability(int bookId, boolean available);
+
+
 }
