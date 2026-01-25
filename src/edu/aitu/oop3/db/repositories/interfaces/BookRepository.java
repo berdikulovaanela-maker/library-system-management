@@ -6,7 +6,6 @@ import java.util.List;
 
 public interface BookRepository {
     Book findById(int id);
-    Book findByTitle(String title);
     List<Book> findAvailableBooks();
     void updateBookAvailability(int bookId, boolean available);
 }

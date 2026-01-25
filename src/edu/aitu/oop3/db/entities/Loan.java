@@ -52,9 +52,6 @@ public class Loan {
         this.dueDate = dueDate;
     }
     public void setReturnDate(LocalDate returnDate) {
-        if(returnDate == null || returnDate.isBefore(loanDate)){
-            throw new NullPointerException("Return Date cannot be null or before loan date");
-        }
         this.returnDate = returnDate;
     }
     public LocalDate getReturnDate() {

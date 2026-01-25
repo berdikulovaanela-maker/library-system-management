@@ -22,6 +22,9 @@ public class ReturnBookService {
         LocalDate today = LocalDate.now();
         if (today.isAfter(loan.getDueDate())) {
             int fine = fineCalculator.execute(loan.getDueDate(), today);
+            loan.setReturnDate(today);
+            loanRepository.updateLoanStatus(loan);
+            bookRepository.updateBookAvailability(loan.getBookId(),true);
             throw new LoanOverdueException("Book is overdue! Due date was " + loan.getDueDate() + ".Your fine is " + fine);
         }
         loan.setReturnDate(today);

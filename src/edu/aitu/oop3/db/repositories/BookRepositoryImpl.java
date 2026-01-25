@@ -31,27 +31,10 @@ public class BookRepositoryImpl implements BookRepository {
         }
         return null;
     }
-
-    @Override
-    public Book findByTitle(String title) {
-        String sql="SELECT * FROM books WHERE title = ?";
-        try{
-            Connection conn = db.getConnection();
-            PreparedStatement ps=conn.prepareStatement(sql);
-            ps.setString(1,title);
-            ResultSet rs=ps.executeQuery();
-            if(rs.next()){
-                return new Book(rs.getInt("id"), rs.getString("title"), rs.getString("author"), rs.getInt("year"), rs.getBoolean("available"));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
     @Override
     public List<Book> findAvailableBooks() {
         List<Book> books=new ArrayList<>();
-        String sql="SELECT * FROM books WHERE available = true";
+        String sql="SELECT * FROM books WHERE available = true ORDER BY ID";
         try (Connection conn = db.getConnection();
             PreparedStatement ps=conn.prepareStatement(sql);
             ResultSet rs=ps.executeQuery();){

@@ -5,7 +5,6 @@ import edu.aitu.oop3.db.db.IDB;
 import edu.aitu.oop3.db.repositories.interfaces.LoanRepository;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,7 +87,7 @@ public class LoanRepositoryImpl implements LoanRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error fetching loans", e);
+            throw new RuntimeException("Error finding loans", e);
         }
         return loans;
     }

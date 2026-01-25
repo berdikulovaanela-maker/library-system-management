@@ -1,6 +1,8 @@
-package edu.aitu.oop3.db;
+package edu.aitu.oop3.db.controller;
 
+import edu.aitu.oop3.db.Exceptions.BookAlreadyOnLoanException;
 import edu.aitu.oop3.db.Exceptions.LoanOverdueException;
+import edu.aitu.oop3.db.Exceptions.MemberNotFoundException;
 import edu.aitu.oop3.db.Services.AvailableBooksService;
 import edu.aitu.oop3.db.Services.BorrowBookService;
 import edu.aitu.oop3.db.Services.CurrentLoansService;
@@ -54,9 +56,9 @@ public class LibrarySystem {
                         break;
                     case 3:
                         System.out.println("Enter loan ID:");
-                        int bookID = scanner.nextInt();
+                        int loanID = scanner.nextInt();
                         scanner.nextLine();
-                        returnBookService.execute(bookID);
+                        returnBookService.execute(loanID);
                         break;
                     case 4:
                         System.out.println("Enter book ID:");
@@ -65,7 +67,11 @@ public class LibrarySystem {
                         System.out.println("Enter member ID:");
                         int member_ID = scanner.nextInt();
                         scanner.nextLine();
-                        borrowBookService.execute(book_ID, member_ID);
+                        try{ borrowBookService.execute(book_ID, member_ID);
+                            System.out.println("Book has been borrowed successfully!");}
+                        catch(MemberNotFoundException | BookAlreadyOnLoanException e){
+                            System.out.println(e.getMessage());
+                        }
                         break;
                     case 5:
                         System.out.println("Good Bye!");
@@ -75,7 +81,7 @@ public class LibrarySystem {
                 }
             } catch (LoanOverdueException e) {
                 System.out.println(e.getMessage());
-                System.out.println("Please try again!");
+                System.out.println("Please pay!");
             }
         }
 

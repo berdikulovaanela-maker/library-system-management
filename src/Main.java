@@ -1,4 +1,4 @@
-import edu.aitu.oop3.db.LibrarySystem;
+import edu.aitu.oop3.db.controller.LibrarySystem;
 import edu.aitu.oop3.db.Services.*;
 import edu.aitu.oop3.db.db.DatabaseConnection;
 import edu.aitu.oop3.db.db.PostgresDB;
