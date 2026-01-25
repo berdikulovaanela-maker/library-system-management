@@ -4,28 +4,31 @@ import edu.aitu.oop3.db.entities.Loan;
 import edu.aitu.oop3.db.Exceptions.LoanOverdueException;
 import edu.aitu.oop3.db.repositories.interfaces.BookRepository;
 import edu.aitu.oop3.db.repositories.interfaces.LoanRepository;
-import edu.aitu.oop3.db.repositories.interfaces.MemberRepository;
 import java.time.LocalDate;
 public class ReturnBookService {
-    private final BookRepository bookRepository;
+    public final BookRepository bookRepository;
     private final LoanRepository loanRepository;
-    private final MemberRepository memberRepository;
-    public ReturnBookService(BookRepository bookRepository, LoanRepository loanRepository,  MemberRepository memberRepository) {
+    private final FineCalculator fineCalculator;
+    public ReturnBookService(BookRepository bookRepository, LoanRepository loanRepository, FineCalculator fineCalculator) {
         this.bookRepository = bookRepository;
         this.loanRepository = loanRepository;
-        this.memberRepository = memberRepository;
+        this.fineCalculator = fineCalculator;
     }
     public void execute(int loanId) {
         Loan loan = loanRepository.findById(loanId);
-        if (loan == null || loan.getReturnDate() == null) {
+        if (loan == null || loan.getReturnDate() != null) {
             throw new RuntimeException("Loan not found or already returned.");
         }
         LocalDate today = LocalDate.now();
-        if (today.isAfter(loan.getReturnDate())) {
-            throw new LoanOverdueException("Book is overdue! Due date was " + loan.getDueDate());
+        if (today.isAfter(loan.getDueDate())) {
+            int fine = fineCalculator.execute(loan.getDueDate(), today);
+            loan.setReturnDate(today);
+            loanRepository.updateLoanStatus(loan);
+            bookRepository.updateBookAvailability(loan.getBookId(),true);
+            throw new LoanOverdueException("Book is overdue! Due date was " + loan.getDueDate() + ".Your fine is " + fine);
         }
+        loan.setReturnDate(today);
         loanRepository.updateLoanStatus(loan);
         bookRepository.updateBookAvailability(loan.getBookId(),true);
-        System.out.println("Book successfully returned!");
     }
 }

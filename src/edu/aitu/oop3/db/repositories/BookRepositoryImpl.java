@@ -10,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 public class BookRepositoryImpl implements BookRepository {
     private final IDB db;
     public BookRepositoryImpl (IDB db) {
@@ -19,9 +18,8 @@ public class BookRepositoryImpl implements BookRepository {
     @Override
     public Book findById(int id) {
         String sql="SELECT id, title, author, year, available FROM books WHERE id = ?";
-        try {
-            Connection conn= db.getConnection();
-            PreparedStatement ps=conn.prepareStatement(sql);
+        try (Connection conn= db.getConnection();
+            PreparedStatement ps=conn.prepareStatement(sql)){
             ps.setInt(1,id);
             ResultSet rs=ps.executeQuery();
 
@@ -29,49 +27,14 @@ public class BookRepositoryImpl implements BookRepository {
                 return new Book(rs.getInt("id"), rs.getString("title"), rs.getString("author"), rs.getInt("year"), rs.getBoolean("available"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return null;
     }
-
-    @Override
-    public Book findByTitle(String title) {
-        String sql="SELECT * FROM books WHERE title = ?";
-        try{
-            Connection conn = db.getConnection();
-            PreparedStatement ps=conn.prepareStatement(sql);
-            ps.setString(1,title);
-            ResultSet rs=ps.executeQuery();
-            if(rs.next()){
-                return new Book(rs.getInt("id"), rs.getString("title"), rs.getString("author"), rs.getInt("year"), rs.getBoolean("available"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public Book findByAuthor(String author) {
-        String sql="SELECT * FROM books WHERE author = ?";
-        try {
-            Connection conn = db.getConnection();
-            PreparedStatement ps=conn.prepareStatement(sql);
-            ps.setString(1,author);
-            ResultSet rs=ps.executeQuery();
-            if(rs.next()){
-                return new Book(rs.getInt("id"), rs.getString("title"), rs.getString("author"), rs.getInt("year"), rs.getBoolean("available"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     @Override
     public List<Book> findAvailableBooks() {
         List<Book> books=new ArrayList<>();
-        String sql="SELECT * FROM books WHERE available = true";
+        String sql="SELECT * FROM books WHERE available = true ORDER BY ID";
         try (Connection conn = db.getConnection();
             PreparedStatement ps=conn.prepareStatement(sql);
             ResultSet rs=ps.executeQuery();){
@@ -84,7 +47,7 @@ public class BookRepositoryImpl implements BookRepository {
                 books.add(book);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return books;
     }
@@ -99,7 +62,7 @@ public class BookRepositoryImpl implements BookRepository {
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }

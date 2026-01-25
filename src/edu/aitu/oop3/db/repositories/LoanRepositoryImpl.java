@@ -5,7 +5,6 @@ import edu.aitu.oop3.db.db.IDB;
 import edu.aitu.oop3.db.repositories.interfaces.LoanRepository;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class LoanRepositoryImpl implements LoanRepository {
         String sql = "INSERT INTO loans (member_id, book_id, loan_date, due_date, return_date)\n" +
                 "            VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = db.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, loan.getMemberId());
             ps.setInt(2, loan.getBookId());
             ps.setDate(3, Date.valueOf(loan.getLoanDate()));
@@ -55,17 +54,19 @@ public class LoanRepositoryImpl implements LoanRepository {
                 ps.setNull(5, Types.DATE);
             }
             ps.executeUpdate();
+            ResultSet keys = ps.getGeneratedKeys();
+            if (keys.next()) {
+                loan.setId(keys.getInt(1));
+            }
         } catch (SQLException e) {
             throw new RuntimeException("Error creating loan", e);
         }
         return loan;
     }
-
     @Override
     public List<Loan> findActiveLoansByMemberId(int memberId) {
         String sql = """
-            
-                SELECT * FROM loans
+            SELECT * FROM loans
             WHERE member_id = ? AND return_date IS NULL
             """;
         List<Loan> loans = new ArrayList<>();
@@ -86,7 +87,7 @@ public class LoanRepositoryImpl implements LoanRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error fetching loans", e);
+            throw new RuntimeException("Error finding loans", e);
         }
         return loans;
     }
@@ -100,7 +101,7 @@ public class LoanRepositoryImpl implements LoanRepository {
         """;
         try (Connection conn = db.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setDate(1, Date.valueOf(LocalDate.now())); // устанавливаем текущую дату
+            ps.setDate(1, Date.valueOf(loan.getReturnDate())); // устанавливаем текущую дату
             ps.setInt(2, loan.getId()); // используем id из объекта Loan
             ps.executeUpdate();
         } catch (SQLException e) {
