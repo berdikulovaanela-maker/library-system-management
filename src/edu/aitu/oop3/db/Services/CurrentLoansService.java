@@ -10,7 +10,7 @@ public class CurrentLoansService {
         this.loanRepository = loanRepository;
     }
     public List<Loan> execute(int memberId) {
-        return loanRepository.findActiveLoansByMemberId(memberId);
+        return loanRepository.findAll().stream().filter(loan -> loan.getMemberId() == memberId).filter(loan -> loan.getReturnDate() == null).toList();
     }
 }
 

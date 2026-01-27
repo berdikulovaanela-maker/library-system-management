@@ -19,7 +19,7 @@ public class BookRepositoryImpl implements BookRepository {
     public void updateBookAvailability(int bookId, boolean available) {
         String sql="UPDATE books SET available = ? WHERE id = ?";
         try (Connection conn = db.getConnection();
-            PreparedStatement ps=conn.prepareStatement(sql);){
+            PreparedStatement ps=conn.prepareStatement(sql)){
             ps.setBoolean(1,available);
             ps.setInt(2,bookId);
             ps.executeUpdate();
@@ -33,7 +33,7 @@ public class BookRepositoryImpl implements BookRepository {
     public Book findById(Integer id) {
         String sql= "SELECT * FROM books WHERE id = ?";
         try(Connection conn = db.getConnection();
-            PreparedStatement ps=conn.prepareStatement(sql);){
+            PreparedStatement ps=conn.prepareStatement(sql)){
             ps.setInt(1,id);
             ResultSet rs=ps.executeQuery();
             if(rs.next()){
@@ -47,16 +47,47 @@ public class BookRepositoryImpl implements BookRepository {
     @Override
     public List<Book> findAll() {
         String sql= "SELECT * FROM books";
-        return List.of();
+        List<Book> books = new ArrayList<>();
+        try(Connection conn = db.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+            ResultSet rs=ps.executeQuery();
+            while(rs.next()){
+                Book book = new Book(rs.getInt("id"),rs.getString("title"),rs.getString("author"),rs.getInt("year"),rs.getBoolean("available"));
+                books.add(book);
+            }
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return books;
     }
 
     @Override
     public void save(Book entity) {
-
+        String sql = "INSERT INTO books(title,author,year,available) VALUES(?,?,?,?,?)";
+        try(Connection conn = db.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setString(1, entity.getTitle());
+            ps.setString(2, entity.getAuthor());
+            ps.setInt(3, entity.getYear());
+            ps.setBoolean(4, entity.isAvailable());
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void delete(Integer integer) {
-
+        String sql = "DELETE FROM books WHERE id = ?";
+        try(Connection conn = db.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setInt(1, integer);
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

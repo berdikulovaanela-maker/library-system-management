@@ -11,7 +11,7 @@ public class AvailableBooksService{
         this.bookRepository = bookRepository;
     }
     public List<Book> execute() {
-        return bookRepository.findAvailableBooks();
+        return bookRepository.findAll().stream().filter(Book::isAvailable).toList();
     }
 }
 
