@@ -8,20 +8,23 @@ import java.time.LocalDate;
 public class ReturnBookService {
     public final BookRepository bookRepository;
     private final LoanRepository loanRepository;
-    private final FineCalculator fineCalculator;
-    public ReturnBookService(BookRepository bookRepository, LoanRepository loanRepository, FineCalculator fineCalculator) {
+    private final FinePolicy finePolicy;
+    public ReturnBookService(BookRepository bookRepository, LoanRepository loanRepository, FinePolicy finePolicy) {
         this.bookRepository = bookRepository;
         this.loanRepository = loanRepository;
-        this.fineCalculator = fineCalculator;
+        this.finePolicy = finePolicy;
     }
     public void execute(int loanId) {
         Loan loan = loanRepository.findById(loanId);
-        if (loan == null || loan.getReturnDate() != null) {
-            throw new RuntimeException("Loan not found or already returned.");
+        if (loan == null) {
+            throw new RuntimeException("Loan not found");
+        }
+        if(loan.getReturnDate() != null) {
+            throw new RuntimeException("Loan already returned");
         }
         LocalDate today = LocalDate.now();
         if (today.isAfter(loan.getDueDate())) {
-            int fine = fineCalculator.execute(loan.getDueDate(), today);
+            int fine = finePolicy.calculateFine(loan.getDueDate(), today);
             loan.setReturnDate(today);
             loanRepository.updateLoanStatus(loan);
             bookRepository.updateBookAvailability(loan.getBookId(),true);

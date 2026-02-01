@@ -34,11 +34,13 @@ void main() {
     BookRepository bookRepo = new BookRepositoryImpl(db);
     MemberRepository memberRepo = new MemberRepositoryImpl(db);
     LoanRepository loanRepo = new LoanRepositoryImpl(db);
-    FineCalculator fineCalc =  new FineCalculator();
+    FinePolicy fineCalc =  new FinePolicy();
     AvailableBooksService availableBooksService = new AvailableBooksService(bookRepo);
     CurrentLoansService currentLoansService = new CurrentLoansService(loanRepo);
     ReturnBookService returnBookService = new ReturnBookService(bookRepo,loanRepo,fineCalc);
     BorrowBookService borrowBookService = new BorrowBookService(memberRepo,bookRepo,loanRepo);
-    LibrarySystem system = new LibrarySystem(availableBooksService,currentLoansService,returnBookService,borrowBookService);
+    LoanReportForMemberService loanReportForMemberService = new LoanReportForMemberService(loanRepo,memberRepo);
+    FindBooksByType findBooksByType = new FindBooksByType(bookRepo);
+    LibrarySystem system = new LibrarySystem(availableBooksService,currentLoansService,returnBookService,borrowBookService,loanReportForMemberService,findBooksByType);
     system.run();
 }

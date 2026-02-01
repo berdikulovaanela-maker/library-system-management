@@ -15,79 +15,96 @@ public class LoanRepositoryImpl implements LoanRepository {
         this.db = db;
     }
     @Override
-    public Loan findById(int loanId) {
+    public Loan findById(Integer id) {
         String sql = "SELECT * FROM loans WHERE id = ?";
         try (Connection conn = db.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, loanId);
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return new Loan(
-                        rs.getInt("id"),
-                        rs.getInt("member_id"),
-                        rs.getInt("book_id"),
-                        rs.getDate("loan_date").toLocalDate(),
-                        rs.getDate("due_date").toLocalDate(),
-                        rs.getDate("return_date") == null
-                                ? null
-                                : rs.getDate("return_date").toLocalDate()
-                );
+                return new Loan.Builder().id(rs.getInt("id")).memberId(rs.getInt("member_id")).bookId(rs.getInt("book_id")).loanDate(rs.getDate("loan_date").toLocalDate()).dueDate(rs.getDate("due_date").toLocalDate()).returnDate(rs.getDate("return_date") == null
+                        ? null
+                        : rs.getDate("return_date").toLocalDate()).build();
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return null;
     }
+
     @Override
-    public Loan createLoan(Loan loan) {
+    public List<Loan> findAll() {
+        String sql = "SELECT * FROM loans";
+        List<Loan> loans = new ArrayList<>();
+        try (Connection conn = db.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Loan loan = new Loan.Builder().id(rs.getInt("id")).memberId(rs.getInt("member_id")).bookId(rs.getInt("book_id")).loanDate(rs.getDate("loan_date").toLocalDate()).dueDate(rs.getDate("due_date").toLocalDate()).returnDate(null).build();
+                loans.add(loan);
+            }
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return loans;
+    }
+
+    @Override
+    public void save(Loan entity) {
         String sql = "INSERT INTO loans (member_id, book_id, loan_date, due_date, return_date)\n" +
                 "            VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = db.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS)) {
-            ps.setInt(1, loan.getMemberId());
-            ps.setInt(2, loan.getBookId());
-            ps.setDate(3, Date.valueOf(loan.getLoanDate()));
-            ps.setDate(4, Date.valueOf(loan.getDueDate()));
-            if (loan.getReturnDate() != null) {
-                ps.setDate(5, Date.valueOf(loan.getReturnDate()));
+            ps.setInt(1, entity.getMemberId());
+            ps.setInt(2, entity.getBookId());
+            ps.setDate(3, Date.valueOf(entity.getLoanDate()));
+            ps.setDate(4, Date.valueOf(entity.getDueDate()));
+            if (entity.getReturnDate() != null) {
+                ps.setDate(5, Date.valueOf(entity.getReturnDate()));
             } else {
                 ps.setNull(5, Types.DATE);
             }
             ps.executeUpdate();
             ResultSet keys = ps.getGeneratedKeys();
             if (keys.next()) {
-                loan.setId(keys.getInt(1));
+                entity.setId(keys.getInt(1));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error creating loan", e);
         }
-        return loan;
     }
+
     @Override
-    public List<Loan> findActiveLoansByMemberId(int memberId) {
-        String sql = """
-            SELECT * FROM loans
-            WHERE member_id = ? AND return_date IS NULL
-            """;
+    public void delete(Integer id) {
+        String sql = "DELETE FROM loans WHERE id = ?";
+        try(Connection conn = db.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            throw new RuntimeException("Error deleting loan", e);
+        }
+    }
+
+    @Override
+    public List<Loan> findByMember_id(int member_id) {
+        String sql = "SELECT * FROM loans WHERE member_id = ?";
         List<Loan> loans = new ArrayList<>();
-        try (Connection conn = db.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, memberId);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    Loan loan = new Loan(
-                            rs.getInt("id"),
-                            rs.getInt("member_id"),
-                            rs.getInt("book_id"),
-                            rs.getDate("loan_date").toLocalDate(),
-                            rs.getDate("due_date").toLocalDate(),
-                            null
-                    );
-                    loans.add(loan);
-                }
+        try(Connection conn = db.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setInt(1, member_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Loan loan = new Loan.Builder().id(rs.getInt("id")).memberId(rs.getInt("member_id")).bookId(rs.getInt("book_id")).loanDate(rs.getDate("loan_date").toLocalDate()).dueDate(rs.getDate("due_date").toLocalDate()).returnDate(rs.getDate("return_date") == null
+                        ? null
+                        : rs.getDate("return_date").toLocalDate()).build();
+                loans.add(loan);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error finding loans", e);
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return loans;
     }

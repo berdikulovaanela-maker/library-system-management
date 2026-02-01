@@ -1,9 +1,9 @@
 package edu.aitu.oop3.db.entities;
 
 public class Member {
-    private int id;
-    private String firstName;
-    private String lastName;
+    private static int id;
+    private static String firstName;
+    private static String lastName;
     private String email;
     public Member(int id, String firstName, String lastName, String email) {
         setId(id);
@@ -15,19 +15,19 @@ public class Member {
     public void setId(int id) {
         this.id = id;
     }
-    public int getId() {
+    public static int getId() {
         return id;
     }
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-    public String getFirstName() {
+    public static String getFirstName() {
         return firstName;
     }
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    public String getLastName() {
+    public static String getLastName() {
         return lastName;
     }
     public void setEmail(String email) {

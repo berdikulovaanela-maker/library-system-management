@@ -20,7 +20,7 @@ public class BorrowBookService {
         this.loanRepository = loanRepository;
     }
     public void execute(int bookID, int memberId) {
-        if (memberRepository.findMemberById(memberId) == null) {
+        if (memberRepository.findById(memberId) == null) {
             throw new MemberNotFoundException("Member with ID " + memberId + " is not found");
         }
         Book book = bookRepository.findById(bookID);
@@ -29,8 +29,8 @@ public class BorrowBookService {
         }
         LocalDate borrowDate = LocalDate.now();
         LocalDate dueDate = borrowDate.plusDays(14);
-        Loan loan =new Loan(0,memberId,bookID,borrowDate,dueDate,null);
-        loanRepository.createLoan(loan);
+        Loan loan = new Loan.Builder().id(0).memberId(memberId).bookId(bookID).loanDate(borrowDate).dueDate(dueDate).returnDate(null).build();
+        loanRepository.save(loan);
         bookRepository.updateBookAvailability(bookID, false);
     }
 }

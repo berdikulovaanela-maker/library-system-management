@@ -3,12 +3,10 @@ package edu.aitu.oop3.db.controller;
 import edu.aitu.oop3.db.Exceptions.BookAlreadyOnLoanException;
 import edu.aitu.oop3.db.Exceptions.LoanOverdueException;
 import edu.aitu.oop3.db.Exceptions.MemberNotFoundException;
-import edu.aitu.oop3.db.Services.AvailableBooksService;
-import edu.aitu.oop3.db.Services.BorrowBookService;
-import edu.aitu.oop3.db.Services.CurrentLoansService;
-import edu.aitu.oop3.db.Services.ReturnBookService;
+import edu.aitu.oop3.db.Services.*;
 import edu.aitu.oop3.db.entities.Book;
 import edu.aitu.oop3.db.entities.Loan;
+import edu.aitu.oop3.db.entities.LoanReport;
 
 import java.util.List;
 import java.util.Scanner;
@@ -19,11 +17,15 @@ public class LibrarySystem {
     private final CurrentLoansService currentLoansService;
     private final ReturnBookService returnBookService;
     private final BorrowBookService borrowBookService;
-    public LibrarySystem(AvailableBooksService availableBooksService, CurrentLoansService currentLoansService, ReturnBookService returnBookService, BorrowBookService borrowBookService){
+    private final LoanReportForMemberService loanReportService;
+    private final FindBooksByType findBooksByType;
+    public LibrarySystem(AvailableBooksService availableBooksService, CurrentLoansService currentLoansService, ReturnBookService returnBookService, BorrowBookService borrowBookService, LoanReportForMemberService loanReportService, FindBooksByType findBooksByType) {
         this.availableBooksService = availableBooksService;
         this.currentLoansService = currentLoansService;
         this.returnBookService = returnBookService;
         this.borrowBookService = borrowBookService;
+        this.loanReportService = loanReportService;
+        this.findBooksByType = findBooksByType;
     }
     public void run(){
         while(true){
@@ -76,7 +78,30 @@ public class LibrarySystem {
                         }
                         break;
                     case 5:
-                        System.out.println("Good Bye!");
+                        System.out.println("Enter member ID:");
+                        int memberId = scanner.nextInt();
+                        scanner.nextLine();
+                        try{
+                            LoanReport report = loanReportService.generateReport(memberId);
+                            System.out.println(report);
+                        }
+                        catch(MemberNotFoundException e){
+                            System.out.println(e.getMessage());
+                        }
+                        break;
+                    case 6:
+                        System.out.println("Enter book type:");
+                        String book_type = scanner.nextLine();
+                        List<Book> booksByType = findBooksByType.findBooksByType(book_type);
+                        if(booksByType.isEmpty()){
+                            System.out.println("There is no books for this type");
+                        }
+                        else {
+                            booksByType.forEach(System.out::println);
+                        }
+                        break;
+                    case 7:
+                        System.out.println("Exiting Library Management System!");
                         return;
                     default:
                         System.out.println("Wrong choice!!!");
@@ -88,6 +113,8 @@ public class LibrarySystem {
         System.out.println("2. Show Active Loans");
         System.out.println("3. Return Book");
         System.out.println("4. Borrow Book");
-        System.out.println("5. Exit");
+        System.out.println("5. Get Loan Report for Member");
+        System.out.println("6. Show list of specific type books ");
+        System.out.println("7. Exit");
         System.out.println("Enter your choice:");
     }}
