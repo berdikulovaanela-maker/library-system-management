@@ -1,5 +1,6 @@
 package edu.aitu.oop3.db.repositories;
 
+import edu.aitu.oop3.db.Factory.BookFactory;
 import edu.aitu.oop3.db.entities.Book;
 import edu.aitu.oop3.db.repositories.interfaces.BookRepository;
 import edu.aitu.oop3.db.db.IDB;
@@ -37,7 +38,7 @@ public class BookRepositoryImpl implements BookRepository {
             ps.setInt(1,id);
             ResultSet rs=ps.executeQuery();
             if(rs.next()){
-                return new Book(rs.getInt("id"),rs.getString("title"),rs.getString("author"),rs.getInt("year"),rs.getBoolean("available"));
+                return new Book(rs.getInt("id"),rs.getString("title"),rs.getString("author"),rs.getInt("year"),rs.getBoolean("available"),rs.getString("type"));
             }
         }catch (SQLException e) {
             throw new RuntimeException(e);
@@ -52,7 +53,7 @@ public class BookRepositoryImpl implements BookRepository {
             PreparedStatement ps = conn.prepareStatement(sql)){
             ResultSet rs=ps.executeQuery();
             while(rs.next()){
-                Book book = new Book(rs.getInt("id"),rs.getString("title"),rs.getString("author"),rs.getInt("year"),rs.getBoolean("available"));
+                Book book = BookFactory.createBook(rs.getInt("id"),rs.getString("title"),rs.getString("author"),rs.getInt("year"),rs.getBoolean("available"),rs.getString("type") );
                 books.add(book);
             }
         }
@@ -71,6 +72,7 @@ public class BookRepositoryImpl implements BookRepository {
             ps.setString(2, entity.getAuthor());
             ps.setInt(3, entity.getYear());
             ps.setBoolean(4, entity.isAvailable());
+            ps.setString(5, entity.getType());
             ps.executeUpdate();
         }
         catch (SQLException e) {

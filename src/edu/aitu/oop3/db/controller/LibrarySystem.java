@@ -102,7 +102,7 @@ public class LibrarySystem {
                         break;
                     case 7:
                         System.out.println("Exiting Library Management System!");
-                        break;
+                        return;
                     default:
                         System.out.println("Wrong choice!!!");
                 }

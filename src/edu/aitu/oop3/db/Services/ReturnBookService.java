@@ -16,8 +16,11 @@ public class ReturnBookService {
     }
     public void execute(int loanId) {
         Loan loan = loanRepository.findById(loanId);
-        if (loan == null || loan.getReturnDate() != null) {
-            throw new RuntimeException("Loan not found or already returned.");
+        if (loan == null) {
+            throw new RuntimeException("Loan not found");
+        }
+        if(loan.getReturnDate() != null) {
+            throw new RuntimeException("Loan already returned");
         }
         LocalDate today = LocalDate.now();
         if (today.isAfter(loan.getDueDate())) {

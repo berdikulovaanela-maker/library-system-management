@@ -15,11 +15,11 @@ public class LoanRepositoryImpl implements LoanRepository {
         this.db = db;
     }
     @Override
-    public Loan findById(Integer integer) {
-        String sql = "SELECT * FROM loans WHERE member_id = ?";
+    public Loan findById(Integer id) {
+        String sql = "SELECT * FROM loans WHERE id = ?";
         try (Connection conn = db.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, integer);
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return new Loan.Builder().id(rs.getInt("id")).memberId(rs.getInt("member_id")).bookId(rs.getInt("book_id")).loanDate(rs.getDate("loan_date").toLocalDate()).dueDate(rs.getDate("due_date").toLocalDate()).returnDate(rs.getDate("return_date") == null
@@ -34,7 +34,7 @@ public class LoanRepositoryImpl implements LoanRepository {
 
     @Override
     public List<Loan> findAll() {
-        String sql = "SELECT * FROM loans where id = ?";
+        String sql = "SELECT * FROM loans";
         List<Loan> loans = new ArrayList<>();
         try (Connection conn = db.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)){

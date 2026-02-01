@@ -8,7 +8,15 @@ public class LoanReport {
     private int overdueLoans;
     private int closedLoans;
     private int totalFine;
-    private LoanReport(Builder builder){}
+    private LoanReport(Builder builder){
+        this.member_id = builder.memberId;
+        this.member_name = builder.member_Firstname;
+        this.loans = builder.loans;
+        this.activeLoans = builder.activeLoans;
+        this.overdueLoans = builder.overdueLoans;
+        this.closedLoans = builder.closedLoans;
+        this.totalFine = builder.totalFine;
+    }
     public static class Builder{
         private int memberId;
         private String member_Firstname;
@@ -74,6 +82,6 @@ public class LoanReport {
 
     @Override
     public String toString() {
-        return "[member ID:" + member_id +"member name:" + member_name + "all loans:" + loans + "active loans:" + activeLoans + "overdue loans:" + overdueLoans + "closedloans:" + closedLoans + "totalfine:" + totalFine + "]" ;
+        return "[member ID:" + member_id +" member name:" + member_name + " all loans:" + loans + " active loans:" + activeLoans + " overdue loans:" + overdueLoans + " closedloans:" + closedLoans + " totalfine:" + totalFine + "]" ;
     }
 }
