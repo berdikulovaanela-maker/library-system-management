@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface BookRepository extends CrudRepository<Book, Integer> {
     void updateBookAvailability(int bookId, boolean available);
+
+
 }

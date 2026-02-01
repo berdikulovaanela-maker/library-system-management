@@ -13,19 +13,20 @@ public class Member {
     }
 
     public void setId(int id) {
-        this.id = id;
+        Member.id = id;
     }
     public static int getId() {
         return id;
     }
+
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        Member.firstName = firstName;
     }
     public static String getFirstName() {
         return firstName;
     }
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        Member.lastName = lastName;
     }
     public static String getLastName() {
         return lastName;
