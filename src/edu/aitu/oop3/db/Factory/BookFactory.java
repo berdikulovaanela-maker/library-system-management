@@ -5,6 +5,7 @@ import edu.aitu.oop3.db.entities.Ebook;
 import edu.aitu.oop3.db.entities.PrintedBook;
 import edu.aitu.oop3.db.entities.ReferenceBook;
 
+
 public class BookFactory {
 
     public static Book createBook(int id, String title, String author, int year, boolean available, String type) {

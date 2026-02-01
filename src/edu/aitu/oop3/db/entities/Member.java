@@ -18,6 +18,7 @@ public class Member {
     public static int getId() {
         return id;
     }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
