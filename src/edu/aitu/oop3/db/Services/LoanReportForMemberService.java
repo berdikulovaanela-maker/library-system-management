@@ -6,7 +6,7 @@ import edu.aitu.oop3.db.entities.LoanReport;
 import edu.aitu.oop3.db.entities.Member;
 import edu.aitu.oop3.db.repositories.interfaces.LoanRepository;
 import edu.aitu.oop3.db.repositories.interfaces.MemberRepository;
-
+import edu.aitu.oop3.db.policies.FinePolicy;
 import java.time.LocalDate;
 import java.util.List;
 

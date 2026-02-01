@@ -1,4 +1,4 @@
-package edu.aitu.oop3.db.Services;
+package edu.aitu.oop3.db.policies;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;

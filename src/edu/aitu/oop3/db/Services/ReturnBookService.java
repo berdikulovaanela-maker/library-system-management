@@ -4,6 +4,7 @@ import edu.aitu.oop3.db.entities.Loan;
 import edu.aitu.oop3.db.Exceptions.LoanOverdueException;
 import edu.aitu.oop3.db.repositories.interfaces.BookRepository;
 import edu.aitu.oop3.db.repositories.interfaces.LoanRepository;
+import edu.aitu.oop3.db.policies.FinePolicy;
 import java.time.LocalDate;
 public class ReturnBookService {
     public final BookRepository bookRepository;

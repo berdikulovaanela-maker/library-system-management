@@ -9,6 +9,7 @@ import edu.aitu.oop3.db.repositories.interfaces.BookRepository;
 import edu.aitu.oop3.db.db.IDB;
 import edu.aitu.oop3.db.repositories.interfaces.LoanRepository;
 import edu.aitu.oop3.db.repositories.interfaces.MemberRepository;
+import edu.aitu.oop3.db.policies.FinePolicy;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
